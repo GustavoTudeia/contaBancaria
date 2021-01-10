@@ -32,7 +32,7 @@ public class Conta implements Serializable{
 	@Column(nullable= false)
 	private double saldo;
 	
-	@Column
+	@Column(nullable= false)
 	private String tipo;
 	
 	@Temporal(TemporalType.TIMESTAMP)
@@ -46,6 +46,17 @@ public class Conta implements Serializable{
 	@JsonIgnore
 	@OneToMany(mappedBy="conta")
 	private List<Transacao> transacoes;
+	
+	public Conta() {
+	}
+
+	public Conta(double saldo, String tipo, Date dataCriacao, Pessoa pessoa) {
+		super();
+		this.saldo = saldo;
+		this.tipo = tipo;
+		this.dataCriacao = dataCriacao;
+		this.pessoa = pessoa;
+	}
 
 	public Long getId() {
 		return id;

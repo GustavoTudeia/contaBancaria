@@ -38,6 +38,18 @@ public class Transacao implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column
 	private Date dataTransacao;
+	
+	public Transacao() {
+		
+	}
+
+	public Transacao(Conta conta, double valor, String tipoTransacao, Date dataTransacao) {
+		super();
+		this.conta = conta;
+		this.valor = valor;
+		this.tipoTransacao = tipoTransacao;
+		this.dataTransacao = dataTransacao;
+	}
 
 	public Long getId() {
 		return id;

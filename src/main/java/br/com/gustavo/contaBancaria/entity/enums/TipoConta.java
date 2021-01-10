@@ -2,8 +2,8 @@ package br.com.gustavo.contaBancaria.entity.enums;
 
 public enum TipoConta {
 
-	CONTACORRENTE(1, "Conta Corrente"),
-	CONTAPOUPANCA(2, "Conta Poupança");
+	CONTACORRENTE(1, "Corrente"),
+	CONTAPOUPANCA(2, "Poupanca");
 	
 	private int cod;
 	private String descricao;

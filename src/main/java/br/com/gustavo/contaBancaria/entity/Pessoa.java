@@ -16,6 +16,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CPF;
@@ -52,7 +53,7 @@ public class Pessoa implements Serializable{
 	@JsonSerialize(using = DateSerializer.class)
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = false)
-	@NotBlank(message = "A data nascimento é obrigatoria!")
+	@NotNull(message = "A data nascimento é obrigatoria!")
 	private Date dataNascimento;
 	
 	
@@ -64,6 +65,19 @@ public class Pessoa implements Serializable{
 	@JsonIgnore
 	@OneToMany(mappedBy = "pessoa", fetch = FetchType.EAGER) 
 	private List<Conta> contas;
+	
+	public Pessoa() {
+		
+	}
+
+	public Pessoa(String nome, String email, String cpf, Date dataNascimento, Date dataCadastro) {
+		super();
+		this.nome = nome;
+		this.email = email;
+		this.cpf = cpf;
+		this.dataNascimento = dataNascimento;
+		this.dataCadastro = dataCadastro;
+	}
 
 	public Long getId() {
 		return id;
