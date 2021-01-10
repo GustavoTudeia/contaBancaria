@@ -29,8 +29,7 @@ public class ContaService {
 	public Conta find(Long id) {
 		Optional<Conta> conta = contaRepository.findById(id);
 		return conta.orElseThrow(()-> new ResourceNotFoundException("Objeto não encontrado! Id: " + id + ", Tipo: " + Conta.class.getName()));
-	}
-	
+	}	
 
 	@Transactional
 	public Conta insert(Conta conta) {
