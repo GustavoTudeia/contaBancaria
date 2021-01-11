@@ -42,6 +42,12 @@ public class ContaService {
 		updateData(newObj, obj);
 		return contaRepository.save(newObj);
 	}
+	
+	public Conta update(Conta obj, Long id) {
+		Conta newObj = find(id);
+		updateData(newObj, obj);
+		return contaRepository.save(newObj);
+	}
 
 	private void updateData(Conta newObj, Conta obj) {
 		newObj.setSaldo(obj.getSaldo());
@@ -61,7 +67,7 @@ public class ContaService {
 		try {
 			contaRepository.deleteById(id);
 		}catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityException("Não possível excluir cliente com pedido(s) associado(s)! ", e.getCause());
+			throw new DataIntegrityException("Não possível excluir conta com transacao(s) associado(s)! ", e.getCause());
 		}
 		
 	}
@@ -71,44 +77,53 @@ public class ContaService {
 	}
 	
 	@Transactional
-	public Conta sacar(Long id , double valor) {
-		Conta conta = find(id);
+	public Conta sacar(Transacao transacao) {
+		Conta conta = find(transacao != null && transacao.getConta() != null ? transacao.getConta().getId() : null);
 		
-		if(conta != null && conta.getSaldo() >= valor) {
-			conta.setSaldo(conta.getSaldo() - valor);
+		if(conta != null && conta.getSaldo() >= transacao.getValor()) {
+			conta.setSaldo(conta.getSaldo() - transacao.getValor());
 		}else {
 			throw new ResourceNotFoundException("Saldo Insuficiente!");
 		}
 		
 		Conta newObj = update(conta);
 		
-		CadastraTransacao(new Transacao(newObj, valor, TipoTransacao.SAQUE.getDescricao(), new Date()));
+		transacao.setTipoTransacao(TipoTransacao.SAQUE.getDescricao());
+		transacao.setDataTransacao(new Date());
+		
+		CadastraTransacao(transacao);
 		
 		return newObj;
 	}
 	
 	@Transactional
-	public Conta Transferir(Long idContaOrigem, Long idContaDestino , double valor) {
-		Conta contaOrigem = find(idContaOrigem);
+	public Conta transferir(Transacao transacao) {
+		Conta contaOrigem = find(transacao != null && transacao.getConta() != null ? transacao.getConta().getId() : null);
 		
 		Conta contaDestino;
 		
-		if(contaOrigem != null && contaOrigem.getSaldo() >= valor) {
-			contaDestino = find(idContaDestino);
+		if(contaOrigem != null && contaOrigem.getSaldo() >= transacao.getValor()) {
+			contaDestino = find(transacao != null && transacao.getContaDestino() != null ? transacao.getContaDestino().getId() : null);
 			
 			//Subtrai da conta Origem
-			contaOrigem.setSaldo(contaOrigem.getSaldo() - valor);
+			contaOrigem.setSaldo(contaOrigem.getSaldo() - transacao.getValor());
 			
 			contaOrigem = update(contaOrigem);
 			
-			CadastraTransacao(new Transacao(contaOrigem, valor, TipoTransacao.TRANSFERENCIA.getDescricao(), new Date()));
+			transacao.setTipoTransacao(TipoTransacao.TRANSFERENCIA.getDescricao());
+			transacao.setDataTransacao(new Date());
+			
+			CadastraTransacao(transacao);
 			
 			//Adiciona valor na conta Destino
-			contaDestino.setSaldo(contaDestino.getSaldo() + valor);
+			contaDestino.setSaldo(contaDestino.getSaldo() + transacao.getValor());
 			
 			contaDestino = update(contaDestino);
 			
-			CadastraTransacao(new Transacao(contaDestino, valor, TipoTransacao.DEPOSITO.getDescricao(), new Date()));
+			transacao.setTipoTransacao(TipoTransacao.DEPOSITO.getDescricao());
+			transacao.setDataTransacao(new Date());
+			
+			CadastraTransacao(transacao);
 		}else {
 			throw new ResourceNotFoundException("Saldo Insuficiente!");
 		}
@@ -117,14 +132,17 @@ public class ContaService {
 	}
 	
 	@Transactional
-	public Conta depositar(Long id, double valor) {
-		Conta conta = find(id);
+	public Conta depositar(Transacao transacao) {
+		Conta conta = find(transacao != null && transacao.getConta() != null ? transacao.getConta().getId() : null);
 		
-		conta.setSaldo(conta.getSaldo() + valor);
+		conta.setSaldo(conta.getSaldo() + transacao.getValor());
 		
 		update(conta);
 		
-		CadastraTransacao(new Transacao(conta, valor, TipoTransacao.DEPOSITO.getDescricao(), new Date()));
+		transacao.setTipoTransacao(TipoTransacao.DEPOSITO.getDescricao());
+		transacao.setDataTransacao(new Date());
+		
+		CadastraTransacao(transacao);
 		
 		return conta;
 	}

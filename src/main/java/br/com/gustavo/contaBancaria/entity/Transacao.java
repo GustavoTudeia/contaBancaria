@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -41,6 +42,9 @@ public class Transacao implements Serializable {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss", locale = "pt-BR", timezone = "UTC-03")
 	@Column
 	private Date dataTransacao;
+	
+	@Transient
+	private Conta contaDestino;
 	
 	public Transacao() {
 		
@@ -92,6 +96,14 @@ public class Transacao implements Serializable {
 
 	public void setDataTransacao(Date dataTransacao) {
 		this.dataTransacao = dataTransacao;
+	}
+
+	public Conta getContaDestino() {
+		return contaDestino;
+	}
+
+	public void setContaDestino(Conta contaDestino) {
+		this.contaDestino = contaDestino;
 	}
 
 	@Override
