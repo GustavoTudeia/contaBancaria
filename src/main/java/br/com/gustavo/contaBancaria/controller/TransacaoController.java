@@ -1,6 +1,5 @@
 package br.com.gustavo.contaBancaria.controller;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +21,7 @@ public class TransacaoController {
 	
 	@PostMapping(path = "/extrato", consumes = "application/json", produces = "application/json")
 	public List<Transacao> extrato(@RequestBody ExtratoParamVO vo){
-		System.out.print(new Date(System.currentTimeMillis()-24*60*60*1000) + " - "+ vo.getInicio());
 		List<Transacao> list = transacaoService.extratoPorPeriodo(vo.getIdConta(), vo.getInicio(), vo.getFim());
-		System.out.print("fasf"+list.size());
 		 return list;
 	}
 }
