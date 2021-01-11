@@ -13,7 +13,7 @@ import br.com.gustavo.contaBancaria.entity.Transacao;
 @Repository
 public interface TransacaoRepository extends JpaRepository<Transacao, Long>{
 	
-	@Query(value = "SELECT t FROM Transacao t t.conta.id = :idConta and t.dataCadastro BETWEEN :inicio AND :fim")
+	@Query(value = "SELECT t FROM Transacao t WHERE t.conta.id = :idConta and t.dataTransacao BETWEEN :inicio AND :fim")
 	List<Transacao> extratoPorPeriodo(@Param("idConta") Long idConta, @Param("inicio") Date inicio, @Param("fim") Date fim);
 
 }

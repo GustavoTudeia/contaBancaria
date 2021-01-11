@@ -21,6 +21,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CPF;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
@@ -52,6 +53,7 @@ public class Pessoa implements Serializable{
 	
 	@JsonSerialize(using = DateSerializer.class)
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss", locale = "pt-BR", timezone = "UTC-03")
 	@Column(nullable = false)
 	@NotNull(message = "A data nascimento é obrigatoria!")
 	private Date dataNascimento;
@@ -59,6 +61,7 @@ public class Pessoa implements Serializable{
 	
 	@JsonSerialize(using = DateSerializer.class)
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss", locale = "pt-BR", timezone = "UTC-03")
 	@Column(nullable = false)
 	private Date dataCadastro;
 	

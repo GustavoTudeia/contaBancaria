@@ -12,14 +12,13 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import br.com.gustavo.contaBancaria.service.exceptions.DataIntegrityException;
 import br.com.gustavo.contaBancaria.service.exceptions.ExceptionResponse;
 import br.com.gustavo.contaBancaria.service.exceptions.ResourceNotFoundException;
 
 @ControllerAdvice
-public class CustomizedResposeEntityExceptionHandler extends ResponseEntityExceptionHandler {
+public class CustomizedResposeEntityExceptionHandler {
 	
 	@ExceptionHandler(Exception.class)
 	public final ResponseEntity<ExceptionResponse> handleAllException(Exception ex, WebRequest request){

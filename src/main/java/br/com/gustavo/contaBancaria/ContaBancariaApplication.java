@@ -15,22 +15,22 @@ import br.com.gustavo.contaBancaria.entity.Pessoa;
 import br.com.gustavo.contaBancaria.entity.Transacao;
 import br.com.gustavo.contaBancaria.entity.enums.TipoConta;
 import br.com.gustavo.contaBancaria.entity.enums.TipoTransacao;
-import br.com.gustavo.contaBancaria.repository.ContaRepository;
-import br.com.gustavo.contaBancaria.repository.PessoaRepository;
-import br.com.gustavo.contaBancaria.repository.TransacaoRepository;
+import br.com.gustavo.contaBancaria.service.ContaService;
+import br.com.gustavo.contaBancaria.service.PessoaService;
+import br.com.gustavo.contaBancaria.service.TransacaoService;
 
 @SpringBootApplication
 @EnableJpaRepositories
 public class ContaBancariaApplication {
 	
 	@Autowired
-    private PessoaRepository pessoaRepository;
+    private PessoaService pessoaRepository;
 	
 	@Autowired
-	private ContaRepository contaRepository;
+	private ContaService contaRepository;
 	
 	@Autowired
-	private TransacaoRepository transacaoRepository;
+	private TransacaoService transacaoRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ContaBancariaApplication.class, args);
@@ -41,17 +41,20 @@ public class ContaBancariaApplication {
 		return args -> {
 			Pessoa gustavo = new Pessoa("Gustavo Pereira", "gustavo@gmail.com", "04937959603",new Date(), new Date());
 			
-			this.pessoaRepository.save(gustavo);
+			this.pessoaRepository.insert(gustavo);
 			
 			List<Pessoa> pessoas = this.pessoaRepository.findAll();
             pessoas.forEach(pessoa -> {
             	System.out.println(pessoa);
             	Conta conta = new Conta(100.00, TipoConta.CONTACORRENTE.getDescricao(), new Date(), pessoa);
-            	this.contaRepository.save(conta);
+            	this.contaRepository.insert(conta);
             	
             	Transacao transacao = new Transacao(conta, 20.00, TipoTransacao.SAQUE.getDescricao(), new Date());
-            	this.transacaoRepository.save(transacao);
+            	this.transacaoRepository.cadastrar(transacao);
             } );
+            
+            List<Transacao> ts = this.transacaoRepository.extratoPorPeriodo(2L, new Date(System.currentTimeMillis()-7*24*60*60*1000), new Date());
+            System.out.println("Transacao encontradas " + ts.size());
             
             System.out.println("Pessoas encontradas " + pessoas.size());
             

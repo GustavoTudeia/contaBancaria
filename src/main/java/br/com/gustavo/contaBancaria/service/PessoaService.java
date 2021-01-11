@@ -1,5 +1,6 @@
 package br.com.gustavo.contaBancaria.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,13 +27,15 @@ public class PessoaService {
 
 	public Pessoa insert(Pessoa pessoa) {
 		validarCpfEmailDuplicado(pessoa);
+		pessoa.setDataCadastro(new Date());
 		pessoa = pessoaReposytory.save(pessoa);
 		return pessoa;
 	}
 
-	public Pessoa update(Pessoa obj) {
-		Pessoa newObj = find(obj.getId());
+	public Pessoa update(Pessoa obj, Long id) {
+		Pessoa newObj = find(id);
 		updateData(newObj, obj);
+		validarCpfEmailDuplicado(newObj);
 		return pessoaReposytory.save(newObj);
 	}
 
