@@ -15,9 +15,10 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -26,31 +27,44 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(description = "Classe representando uma Pessoa na aplicacao.")
 @Entity
 @Table(name = "pessoa")
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Pessoa implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@ApiModelProperty(notes = "Nome da Pessoa.", 
+            example = "Manoel Silva", required = true)
 	@Column(nullable = false)
-	@NotBlank(message = "O nome é obrigatorio!")
+	@NotNull(message = "O nome é obrigatorio!")
 	private String nome;
 	
+	@ApiModelProperty(notes = "Email da Pessoa.", 
+            example = "manoel@gmail.com", required = true)
 	@Column(nullable = false, unique = true)
-	@NotBlank(message = "O e-mail é obrigatorio!")
+	@NotNull(message = "O e-mail é obrigatorio!")
 	@Email(message = "O e-mail é inválido!")
 	private String email;
 	
+	@ApiModelProperty(notes = "CPF da Pessoa.", 
+            example = "05637986503", required = true)
 	@Column(nullable = false, length = 11, unique = true)
-	@NotBlank(message = "O e-mail é obrigatorio!")
+	@NotNull(message = "O e-mail é obrigatorio!")
 	@Length(min = 11, max = 11, message = "Tamanho do CPF é inválido!")
 	@CPF(message = "CPF inválido!")
 	private String cpf;
 	
+	@ApiModelProperty(notes = "Data de Nascimento da Pessoa.", 
+            example = "22-04-1981 09:32:58", required = true)
 	@JsonSerialize(using = DateSerializer.class)
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss", locale = "pt-BR", timezone = "UTC-03")
@@ -58,13 +72,15 @@ public class Pessoa implements Serializable{
 	@NotNull(message = "A data nascimento é obrigatoria!")
 	private Date dataNascimento;
 	
-	
+	@ApiModelProperty(notes = "Data de Cadastro da Pessoa no sistema.", 
+            example = "22-04-1981 09:32:58", required = false)
 	@JsonSerialize(using = DateSerializer.class)
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss", locale = "pt-BR", timezone = "UTC-03")
 	@Column(nullable = false)
 	private Date dataCadastro;
 	
+	@ApiModelProperty(notes = "Relacao de contas bancaria associada a Pessoa", required = false)
 	@JsonIgnore
 	@OneToMany(mappedBy = "pessoa", fetch = FetchType.EAGER) 
 	private List<Conta> contas;

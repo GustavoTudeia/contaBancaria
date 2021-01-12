@@ -18,6 +18,10 @@ import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(description = "Classe representando uma Transacao na aplicacao.")
 @Entity
 @Table(name = "transacao")
 public class Transacao implements Serializable {
@@ -25,19 +29,27 @@ public class Transacao implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
+	@ApiModelProperty(notes = "Conta a qual a transacao foi realizada.", 
+            example = "Conta 01", required = false)
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_conta")
 	private Conta conta;
 	
+	@ApiModelProperty(notes = "Valor da Transacao realizada na Conta.", 
+            example = "100.00", required = false)
 	@Column
 	private double valor;
 	
+	@ApiModelProperty(notes = "Tipo da Transacao realizada na Conta.", 
+            example = "Saque, Deposito ou Transferencia", required = false)
 	@Column
 	private String tipoTransacao;
 	
+	@ApiModelProperty(notes = "Data da Transacao realizada na Conta.", 
+            example = "12-01-2021 10:15:23", required = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss", locale = "pt-BR", timezone = "UTC-03")
 	@Column

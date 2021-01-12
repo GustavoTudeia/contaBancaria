@@ -3,18 +3,23 @@ package br.com.gustavo.contaBancaria.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class ExtratoParamVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
+	@NotNull(message = "O id da Conta Obrigatorio!")
 	private Long idConta;
 	
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@NotNull(message = "Data inicio Obrigatorio!")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss", locale = "pt-BR", timezone = "UTC-03")
 	private Date inicio;
 	
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@NotNull(message = "Data fim Obrigatorio!")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss", locale = "pt-BR", timezone = "UTC-03")
 	private Date fim;
 	
 	public Long getIdConta() {

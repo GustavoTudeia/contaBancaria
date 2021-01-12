@@ -110,20 +110,14 @@ public class ContaService {
 			
 			contaOrigem = update(contaOrigem);
 			
-			transacao.setTipoTransacao(TipoTransacao.TRANSFERENCIA.getDescricao());
-			transacao.setDataTransacao(new Date());
-			
-			CadastraTransacao(transacao);
+			CadastraTransacao(new Transacao(contaOrigem, transacao.getValor(), TipoTransacao.TRANSFERENCIA.getDescricao(), new Date()));
 			
 			//Adiciona valor na conta Destino
 			contaDestino.setSaldo(contaDestino.getSaldo() + transacao.getValor());
 			
 			contaDestino = update(contaDestino);
 			
-			transacao.setTipoTransacao(TipoTransacao.DEPOSITO.getDescricao());
-			transacao.setDataTransacao(new Date());
-			
-			CadastraTransacao(transacao);
+			CadastraTransacao(new Transacao(contaDestino, transacao.getValor(), TipoTransacao.DEPOSITO.getDescricao(), new Date()));
 		}else {
 			throw new ResourceNotFoundException("Saldo Insuficiente!");
 		}
